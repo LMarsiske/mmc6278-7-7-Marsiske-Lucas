@@ -19,8 +19,8 @@ var questionsArr = [
     ],
   },
   {
-    question: "Who did not create JavaScript?",
-    answer: "Brendan Eich",
+    question: "Who created Linux?",
+    answer: "Linus Torvalds",
     options: [
       "Linus Torvalds",
       "Brendan Eich",
@@ -29,8 +29,13 @@ var questionsArr = [
     ],
   },
   {
-    question: "Who created JavaScript?",
-    answer: "Brendan Eich",
+    question: "Who created Windows?",
+    answer: "Bill Gates",
+    options: ["Linus Torvalds", "Brendan Eich", "Dan Abramov", "Bill Gates"],
+  },
+  {
+    question: "Who popularized JSON?",
+    answer: "Douglas Crockford",
     options: [
       "Linus Torvalds",
       "Brendan Eich",
@@ -39,28 +44,8 @@ var questionsArr = [
     ],
   },
   {
-    question: "Who did not create JavaScript?",
-    answer: "Brendan Eich",
-    options: [
-      "Linus Torvalds",
-      "Brendan Eich",
-      "Dan Abramov",
-      "Douglas Crockford",
-    ],
-  },
-  {
-    question: "Who created JavaScript?",
-    answer: "Brendan Eich",
-    options: [
-      "Linus Torvalds",
-      "Brendan Eich",
-      "Dan Abramov",
-      "Douglas Crockford",
-    ],
-  },
-  {
-    question: "Who did not create JavaScript?",
-    answer: "Brendan Eich",
+    question: "Who created Redux and co-authored Create React App?",
+    answer: "Dan Abramov",
     options: [
       "Linus Torvalds",
       "Brendan Eich",
@@ -90,19 +75,22 @@ const createCountdown = (ticks) => {
 };
 
 const handleAnswer = (e) => {
+  console.log(
+    "handling answer: ",
+    e.target.value === questionsArr[questionIndex].answer
+  );
   if (e.target.value === questionsArr[questionIndex].answer) {
     correct++;
   } else {
     incorrect++;
   }
+  console.log(correct);
   clearInterval(interval);
   questionIndex++;
   handleQuizQuestion(questionIndex);
 };
 
 const setQuizHTML = (question) => {
-  console.log("setting html");
-
   let p = document.createElement("p");
   p.innerHTML = question.question;
   let innerDiv = document.createElement("div");
@@ -118,43 +106,41 @@ const setQuizHTML = (question) => {
   div.replaceChildren(p, innerDiv, timer);
 };
 
-const handleGameOver = () => {};
+const handleGameOver = () => {
+  let score = Math.round((correct / questionsArr.length) * 100);
+  console.log("gameover: ", score);
+  localStorage.setItem("previous-score", score);
+  correct, incorrect, (questionIndex = 0);
+  startGame();
+};
 
 const handleQuizQuestion = async (index) => {
-  console.log(index, questionsArr.length);
   if (index >= questionsArr.length) {
     handleGameOver();
     return;
   }
   const question = questionsArr[index];
-  console.log(question);
   setQuizHTML(question);
   createCountdown(30);
 };
 
 const runGame = () => {
-  console.log("running game");
   let previousScoreEl = document.getElementById("previous-score");
   if (previousScoreEl) {
     previousScoreEl.innerHTML = "";
   }
   div.removeChild(startBtn);
 
-  // for (let question of questionsArr) {
-  //   handleQuizQuestion(question);
-  // }
-
   handleQuizQuestion(questionIndex);
 };
 
 const startGame = () => {
-  localStorage.setItem("previous-score", "60%");
   let previousScore = localStorage.getItem("previous-score");
+  console.log(previousScore);
+  let p = document.createElement("p");
   if (previousScore) {
-    let p = document.createElement("p");
-    p.innerHTML = `Previous Score: ${previousScore}`;
+    p.innerHTML = `Previous Score: ${previousScore}%`;
     p.id = "previous-score";
-    div.append(p);
   }
 
   let btn = document.createElement("button");
@@ -163,7 +149,7 @@ const startGame = () => {
   btn.onclick = runGame;
   startBtn = btn;
 
-  div.append(btn);
+  div.replaceChildren(p, btn);
 };
 
 window.onload = startGame();
