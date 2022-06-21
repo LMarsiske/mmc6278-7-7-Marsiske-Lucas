@@ -28,10 +28,49 @@ var questionsArr = [
       "Douglas Crockford",
     ],
   },
+  {
+    question: "Who created JavaScript?",
+    answer: "Brendan Eich",
+    options: [
+      "Linus Torvalds",
+      "Brendan Eich",
+      "Dan Abramov",
+      "Douglas Crockford",
+    ],
+  },
+  {
+    question: "Who did not create JavaScript?",
+    answer: "Brendan Eich",
+    options: [
+      "Linus Torvalds",
+      "Brendan Eich",
+      "Dan Abramov",
+      "Douglas Crockford",
+    ],
+  },
+  {
+    question: "Who created JavaScript?",
+    answer: "Brendan Eich",
+    options: [
+      "Linus Torvalds",
+      "Brendan Eich",
+      "Dan Abramov",
+      "Douglas Crockford",
+    ],
+  },
+  {
+    question: "Who did not create JavaScript?",
+    answer: "Brendan Eich",
+    options: [
+      "Linus Torvalds",
+      "Brendan Eich",
+      "Dan Abramov",
+      "Douglas Crockford",
+    ],
+  },
 ];
 
 const handleTimerRunout = () => {
-  console.log("timer ran out: ", timeout, interval);
   clearInterval(interval);
   questionIndex++;
   handleQuizQuestion(questionIndex);
@@ -42,7 +81,7 @@ const createCountdown = (ticks) => {
   timer.innerHTML = ticks;
   interval = setInterval(() => {
     ticks--;
-    timer.innerHTML = ticks;
+    timer.innerHTML = `${ticks}`;
     if (ticks === 0) {
       incorrect++;
       handleTimerRunout();
@@ -51,8 +90,14 @@ const createCountdown = (ticks) => {
 };
 
 const handleAnswer = (e) => {
-  console.log(e.target);
+  if (e.target.value === questionsArr[questionIndex].answer) {
+    correct++;
+  } else {
+    incorrect++;
+  }
+  clearInterval(interval);
   questionIndex++;
+  handleQuizQuestion(questionIndex);
 };
 
 const setQuizHTML = (question) => {
@@ -64,6 +109,7 @@ const setQuizHTML = (question) => {
   question.options.forEach((option) => {
     let btn = document.createElement("button");
     btn.innerHTML = option;
+    btn.value = option;
     btn.onclick = handleAnswer;
     innerDiv.append(btn);
   });
@@ -75,12 +121,15 @@ const setQuizHTML = (question) => {
 const handleGameOver = () => {};
 
 const handleQuizQuestion = async (index) => {
+  console.log(index, questionsArr.length);
   if (index >= questionsArr.length) {
     handleGameOver();
+    return;
   }
   const question = questionsArr[index];
+  console.log(question);
   setQuizHTML(question);
-  createCountdown(5);
+  createCountdown(30);
 };
 
 const runGame = () => {
